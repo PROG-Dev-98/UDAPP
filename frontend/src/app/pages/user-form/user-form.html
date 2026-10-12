@@ -1,0 +1,159 @@
+<section class="form-page">
+  <div class="page-heading">
+    <div>
+      <h2>{{ isEditMode ? 'Edit User' : 'Add User' }}</h2>
+      <p>
+        {{ isEditMode
+          ? 'Update the user details below.'
+          : 'Enter the details below to add a user to the directory.' }}
+      </p>
+    </div>
+
+    <a class="btn btn-secondary" routerLink="/users">
+      Back to User List
+    </a>
+  </div>
+
+  @if (isLoadingUser) {
+    <div class="loading-message" role="status" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <span>Loading user details...</span>
+    </div>
+  }
+
+  <form
+    [formGroup]="userForm"
+    (ngSubmit)="onSubmit()"
+    [hidden]="isLoadingUser"
+    novalidate
+  >
+    <!-- Name -->
+    <div class="form-field">
+      <label for="name">
+        Full Name <span class="required">*</span>
+      </label>
+      <input
+        id="name"
+        type="text"
+        formControlName="name"
+        placeholder="Enter full name"
+        minlength="2"
+        maxlength="100"
+        autocomplete="name"
+        [class.invalid]="userForm.controls.name.touched && userForm.controls.name.invalid"
+      />
+
+      @if (userForm.controls.name.touched && userForm.controls.name.hasError('required')) {
+        <small class="field-error">Name is required.</small>
+      } @else if (userForm.controls.name.touched && userForm.controls.name.hasError('minlength')) {
+        <small class="field-error">Name must be at least 2 characters.</small>
+      } @else if (userForm.controls.name.touched && userForm.controls.name.hasError('maxlength')) {
+        <small class="field-error">Name cannot exceed 100 characters.</small>
+      }
+    </div>
+
+    <!-- Age -->
+    <div class="form-field">
+      <label for="age">
+        Age <span class="required">*</span>
+      </label>
+      <input
+        id="age"
+        type="number"
+        formControlName="age"
+        min="0"
+        max="120"
+        step="1"
+        placeholder="Enter age"
+        [class.invalid]="userForm.controls.age.touched && userForm.controls.age.invalid"
+      />
+
+      @if (userForm.controls.age.touched && userForm.controls.age.hasError('required')) {
+        <small class="field-error">Age is required.</small>
+      } @else if (userForm.controls.age.touched && (userForm.controls.age.hasError('min') || userForm.controls.age.hasError('max'))) {
+        <small class="field-error">Age must be between 0 and 120.</small>
+      } @else if (userForm.controls.age.touched && userForm.controls.age.hasError('pattern')) {
+        <small class="field-error">Age must be a whole number.</small>
+      }
+    </div>
+
+    <!-- City -->
+    <div class="form-field">
+      <label for="city">
+        City <span class="required">*</span>
+      </label>
+      <input
+        id="city"
+        type="text"
+        formControlName="city"
+        placeholder="Enter city"
+        autocomplete="address-level2"
+        [class.invalid]="userForm.controls.city.touched && userForm.controls.city.invalid"
+      />
+
+      @if (userForm.controls.city.touched && userForm.controls.city.hasError('required')) {
+        <small class="field-error">City is required.</small>
+      }
+    </div>
+
+    <!-- State -->
+    <div class="form-field">
+      <label for="state">
+        State <span class="required">*</span>
+      </label>
+      <input
+        id="state"
+        type="text"
+        formControlName="state"
+        placeholder="Enter state"
+        autocomplete="address-level1"
+        [class.invalid]="userForm.controls.state.touched && userForm.controls.state.invalid"
+      />
+
+      @if (userForm.controls.state.touched && userForm.controls.state.hasError('required')) {
+        <small class="field-error">State is required.</small>
+      }
+    </div>
+
+    <!-- Pincode -->
+    <div class="form-field">
+      <label for="pincode">
+        Pincode <span class="required">*</span>
+      </label>
+      <input
+        id="pincode"
+        type="text"
+        formControlName="pincode"
+        placeholder="Enter pincode"
+        minlength="4"
+        maxlength="10"
+        autocomplete="postal-code"
+        [class.invalid]="userForm.controls.pincode.touched && userForm.controls.pincode.invalid"
+      />
+
+      @if (userForm.controls.pincode.touched && userForm.controls.pincode.hasError('required')) {
+        <small class="field-error">Pincode is required.</small>
+      } @else if (userForm.controls.pincode.touched && userForm.controls.pincode.hasError('minlength')) {
+        <small class="field-error">Pincode must be at least 4 characters.</small>
+      } @else if (userForm.controls.pincode.touched && userForm.controls.pincode.hasError('maxlength')) {
+        <small class="field-error">Pincode cannot exceed 10 characters.</small>
+      }
+    </div>
+
+    @if (errorMessage) {
+      <div class="form-error" role="alert">{{ errorMessage }}</div>
+    }
+
+    <div class="form-actions">
+      <button
+        class="btn btn-primary"
+        type="submit"
+        [disabled]="isSubmitting || isLoadingUser"
+      >
+        {{ isSubmitting ? 'Saving...' : (isEditMode ? 'Update User' : 'Save User') }}
+      </button>
+
+      <a class="btn btn-secondary" routerLink="/users">Cancel</a>
+    </div>
+  </form>
+</section>

@@ -1,0 +1,95 @@
+<section class="users-page">
+  @if (successMessage) {
+    <div class="success-toast" role="status">
+      <span>{{ successMessage }}</span>
+      <button
+        type="button"
+        class="toast-close"
+        aria-label="Dismiss notification"
+        (click)="successMessage = ''"
+      >
+        &times;
+      </button>
+    </div>
+  }
+
+  <div class="page-heading">
+    <div>
+      <h2>User List</h2>
+      <p>View and manage directory users.</p>
+    </div>
+
+    <a class="btn btn-primary" routerLink="/users/add">
+      + Add User
+    </a>
+  </div>
+
+  @if (isLoading) {
+    <div class="message loading-message" role="status" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <span>Loading users...</span>
+    </div>
+  } @else if (errorMessage) {
+    <div class="message error">
+      <p>{{ errorMessage }}</p>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="loadUsers()"
+      >
+        Retry
+      </button>
+    </div>
+  } @else if (users.length === 0) {
+    <div class="empty-state">
+      <h3>No users found</h3>
+      <p>Get started by adding your first user.</p>
+      <a class="btn btn-primary" routerLink="/users/add">
+        Add User
+      </a>
+    </div>
+  } @else {
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Pincode</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (user of users; track user.id) {
+            <tr>
+              <td>{{ user.name }}</td>
+              <td>{{ user.age }}</td>
+              <td>{{ user.city }}</td>
+              <td>{{ user.state }}</td>
+              <td>{{ user.pincode }}</td>
+              <td class="actions-cell">
+                <a
+                  class="btn btn-secondary"
+                  [routerLink]="['/users/edit', user.id]"
+                >
+                  Edit
+                </a>
+
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  (click)="deleteUser(user.id)"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
